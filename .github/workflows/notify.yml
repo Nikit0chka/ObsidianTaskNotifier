@@ -16,6 +16,10 @@ jobs:
       - name: Checkout public repo
         uses: actions/checkout@v4
 
+
+      - name: Check timezone
+        run: date +"%Z %z"
+      
       # 2. Устанавливаем .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -38,7 +42,7 @@ jobs:
           VAULT_PATH: vault
           TZ: 'Europe/Saratov'   # или Europe/Moscow если время московское
         run: dotnet run --project ObsidianTaskNotifier/ObsidianTaskNotifier.csproj
-              
+      
       # 5. Коммитим изменения state.json обратно в публичный репозиторий
       - name: Commit state changes
         run: |
