@@ -36,8 +36,9 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           VAULT_PATH: vault
+          TZ: 'Europe/Saratov'   # или Europe/Moscow если время московское
         run: dotnet run --project ObsidianTaskNotifier/ObsidianTaskNotifier.csproj
-
+              
       # 5. Коммитим изменения state.json обратно в публичный репозиторий
       - name: Commit state changes
         run: |
@@ -45,4 +46,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add state.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Update notification state"
-          git push origin HEAD:main
+          git push origin HEAD:master

@@ -35,6 +35,10 @@ class Program
         var tasks = FindTasks(vaultPath);
         tasks.Sort((a, b) => a.Start.CompareTo(b.Start));
 
+        Console.WriteLine($"Найдено задач: {tasks.Count}");
+        foreach (var t in tasks.Take(10))
+            Console.WriteLine($"  {t.Start:yyyy-MM-dd HH:mm} - {t.Description}");
+
         var now = DateTime.Now;
 
         // Все задачи, которые начнутся в течение ближайших 5 минут (включая прямо сейчас)
@@ -43,6 +47,7 @@ class Program
             .OrderBy(t => t.Start)
             .ToList();
 
+        Console.WriteLine($"Задач в окне: {upcomingTasks.Count}");
         foreach (var task in upcomingTasks)
         {
             var timeLeft = task.Start - now;
@@ -64,6 +69,7 @@ class Program
                 Console.WriteLine($"Уведомление уже отправлено: {key}");
             }
         }
+
 
         await SaveStateAsync(stateFile, state);
     }
