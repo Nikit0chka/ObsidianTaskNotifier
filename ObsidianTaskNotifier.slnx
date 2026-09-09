@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/SolutionItems/">
     <File Path=".github\workflows\notify.yml" />
+    <File Path=".github\workflows\workflow.yml" />
   </Folder>
   <Project Path="ObsidianTaskNotifier/ObsidianTaskNotifier.csproj" />
 </Solution>
