@@ -33,7 +33,7 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           VAULT_PATH: vault
-        run: dotnet run --project ObsidianTaskNotifier.csproj
+        run: dotnet run --project ObsidianTaskNotifier/ObsidianTaskNotifier.csproj
 
       # 5. Коммитим изменения state.json обратно в публичный репозиторий
       - name: Commit state changes
