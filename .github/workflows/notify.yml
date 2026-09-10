@@ -1,10 +1,6 @@
 name: Task Notifications
-
 on:
-  schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
-
+  workflow_dispatch: # Оставляем только этот триггер
 permissions:
   contents: write
 
@@ -15,10 +11,6 @@ jobs:
       # 1. Получаем код скрипта из публичного репозитория
       - name: Checkout public repo
         uses: actions/checkout@v4
-
-
-      - name: Check timezone
-        run: date +"%Z %z"
       
       # 2. Устанавливаем .NET SDK
       - name: Setup .NET
