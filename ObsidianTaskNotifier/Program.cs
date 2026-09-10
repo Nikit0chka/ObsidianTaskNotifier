@@ -18,7 +18,7 @@ builder.Logging.AddSimpleConsole(static options =>
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<AppConfigLoader>();
-builder.Services.AddSingleton(static sp => sp.GetRequiredService<AppConfigLoader>().Load());
+builder.Services.AddSingleton<AppConfig>(static sp => sp.GetRequiredService<AppConfigLoader>().Load());
 builder.Services.AddSingleton<ITaskParser, MarkdownTaskParser>();
 builder.Services.AddSingleton<IStateRepository, JsonStateRepository>();
 builder.Services.AddHttpClient<INotificationSender, NtfyNotificationSender>();

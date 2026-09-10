@@ -1,24 +1,27 @@
 name: Task Notifications
 on:
-  workflow_dispatch: # Оставляем только этот триггер
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
   check-tasks:
     runs-on: ubuntu-latest
     steps:
-      # 1. Получаем код скрипта из публичного репозитория
       - name: Checkout public repo
         uses: actions/checkout@v4
-      
-      # 2. Устанавливаем .NET SDK
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      # 3. Клонируем приватный vault
+      - name: Restore state cache
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: state-${{ github.run_id }}
+          restore-keys: |
+            state-
+
       - name: Clone private vault
         env:
           PAT: ${{ secrets.PRIVATE_REPO_TOKEN }}
@@ -27,19 +30,17 @@ jobs:
         run: |
           git clone --depth 1 https://x-access-token:${PAT}@github.com/${USER_NAME}/${OBSIDIAN_VAULT_REPO_NAME}.git vault
 
-      # 4. Запускаем скрипт
       - name: Run notification script
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           VAULT_PATH: vault
-          TZ: 'Europe/Saratov'   # или Europe/Moscow если время московское
+          STATE_FILE_PATH: ${{ github.workspace }}/state.json
+          TZ: 'Europe/Saratov'
         run: dotnet run --project ObsidianTaskNotifier/ObsidianTaskNotifier.csproj
-      
-      # 5. Коммитим изменения state.json обратно в публичный репозиторий
-      - name: Commit state changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add state.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update notification state"
-          git push origin HEAD:master
+
+      - name: Save state cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: state-${{ github.run_id }}
